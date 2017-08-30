@@ -10,6 +10,11 @@ class Thread extends Model
     {
         return '/threads/' . $this->id;
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
     /**
      * Function description
      *
@@ -20,4 +25,10 @@ class Thread extends Model
     {
         return $this->hasMany(Reply::class);
     }
+
+    public function addReply($reply)
+    {
+        $this->replies()->create($reply);
+    }
+
 }
