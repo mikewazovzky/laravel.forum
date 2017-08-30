@@ -26,7 +26,7 @@ class CreateThreadTest extends TestCase
     }
 
     /** @test */
-    public function unauthenticated_user_may_not_create_new_forum_thread()
+    public function guest_may_not_create_new_forum_thread()
     {
         $this->expectException('Illuminate\Auth\AuthenticationException');
 
@@ -35,4 +35,12 @@ class CreateThreadTest extends TestCase
         $this->post('/threads', []);
         // Then exception is thrown 
     }    
+
+    /** @test */
+    public function guest_may_not_see_create_page()
+    {
+        $this->withExceptionHandling()
+            ->get('/threads/create')
+            ->assertRedirect('/login');
+    }        
 }
