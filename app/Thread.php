@@ -10,4 +10,14 @@ class Thread extends Model
     {
         return '/threads/' . $this->id;
     }
+    /**
+     * Function description
+     *
+     * @param type name
+     * @return type 
+     */
+    public function replies()
+    {
+        return $this->hasMany(Reply::class);
+    }
 }
