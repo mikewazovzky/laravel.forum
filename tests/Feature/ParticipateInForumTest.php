@@ -17,7 +17,7 @@ class ParticipateInForumTest extends TestCase
         // ... existing thread
         $thread = factory('App\Thread')->create();
 
-        // When user posts a areply: post to '/threads/id/posts'
+        // When user posts a reply: post to '/threads/id/replies'
         $reply = factory('App\Reply')->make();
         $this->post($thread->path() . '/replies', $reply->toArray());
 

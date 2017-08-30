@@ -12,6 +12,9 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <style>
+        body { padding-bottom: 50px; }
+    </style>
 </head>
 <body>
     <div id="app">
@@ -36,7 +39,7 @@
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
-                        &nbsp;
+                        <li><a href="/threads">All threads</a></li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
