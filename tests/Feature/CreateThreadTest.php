@@ -13,9 +13,9 @@ class CreateThreadTest extends TestCase
     public function an_authenticated_user_may_create_new_forum_thread()
     {
         // Given we have a signed in user
-        $this->actingAs(factory('App\User')->create());
+        $this->signIn();
         // When user post a new thread
-        $thread = factory('App\Thread')->make();
+        $thread = make('App\Thread');
         $this->post('/threads', $thread->toArray());
         // Then thread is posted to databse and 
         // .. is visble on threads.index page 
