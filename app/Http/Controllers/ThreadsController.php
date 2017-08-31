@@ -20,11 +20,16 @@ class ThreadsController extends Controller
     public function index(Channel $channel)
     {
         if ($channel->exists) {
-            $threads = $channel->threads()->latest()->get();
+            $threads = $channel->threads()->latest();
         } else {
-            $threads =Thread::latest()->get();
+            $threads =Thread::latest();
         }
-        return view('threads.index', compact('threads'));
+
+        if($userName = request('by')) {
+            $user = \App\User::where('name', $userName)->first();
+            $threads = $threads->where('user_id', $user->id);
+        }
+        return view('threads.index', [ 'threads' => $threads->get() ]);
     }
 
     /**
@@ -95,7 +100,7 @@ class ThreadsController extends Controller
     {
         //
     }
-
+    
     /**
      * Remove the specified resource from storage.
      *
