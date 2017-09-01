@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <div class="row">
-        <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-8">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <a href="#">{{ $thread->user->name }}</a> posted:
@@ -13,20 +13,13 @@
                     {{ $thread->body }}
                 </div>
             </div>
-        </div>
-    </div>
 
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            @foreach($thread->replies as $reply)
+            @foreach($replies as $reply)
                 @include('threads.reply')
             @endforeach
-        </div>
-    </div>   
+            {{ $replies->links() }}
 
-    @if(auth()->check())
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2">
+            @if(auth()->check())
                 <form method="POST" action="{{ $thread->path() . '/replies'}}">
                     {{ csrf_field() }}
                     <div class="form-group">
@@ -34,11 +27,25 @@
                     </div>
                     <button class="btn btn-primary">Submit</button>
                 </form>
-            </div>
-        </div>   
-    @else
-        <p class="text-center">Pls. <a href="{{ route('login') }}">sign in</a> to participate in this discussion.</p>     
-    @endif
+            @else
+                <p class="text-center">Pls. <a href="{{ route('login') }}">sign in</a> to participate in this discussion.</p>     
+            @endif            
+        </div><!-- col-md-8 -->
 
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <p>
+                        This thread was published 
+                        <strong>{{ $thread->created_at->diffForHumans() }}</strong> by
+                        <a href="#">{{ $thread->user->name }}</a>
+                        and currently has <strong>{{ $thread->replies_count }}</strong>
+                        {{ str_plural('reply', $thread->replies_count) }}.                      
+                    </p>
+
+                </div>
+            </div>
+        </div>       
+    </div><!-- row -->
 </div>
 @endsection
