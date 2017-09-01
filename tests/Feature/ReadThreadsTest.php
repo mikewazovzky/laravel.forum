@@ -72,4 +72,25 @@ class ReadThreadsTest extends TestCase
             ->assertSee($threadByMike->title)
             ->assertDontSee($threadNotByMike->title);   
     }
+
+    /** @test */
+    public function a_user_can_filter_threads_by_popularity()
+    {
+        // Given we have three threads
+        // With 3, 0 and 2 replies        
+        $threadWithThreeReplies = create('App\Thread');
+        create('App\Reply', ['thread_id' => $threadWithThreeReplies->id ], 3);
+
+        $threadWithNoReplies =$this->thread;
+
+        $threadWithTwoReplies = create('App\Thread');
+        create('App\Reply', ['thread_id' => $threadWithTwoReplies->id], 2);
+
+        // When we filter thread by popularity
+        $response = $this->getJson('/threads?popular=1')->json();
+        // dd($response);
+
+        // They should come in proper order
+        $this->assertEquals([3, 2, 0], array_column($response, 'replies_count'));   
+    }    
 }

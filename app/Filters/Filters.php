@@ -18,6 +18,8 @@ abstract class Filters
     {
         $this->builder = $builder;
 
+        // dd($this->getFilters());
+
         // Apply filters to the builder
         foreach($this->getFilters() as $filter => $value) {
             if(method_exists($this, $filter)) {
