@@ -32,6 +32,9 @@ class Reply extends Model
     public function isFavorited($user = null)
     {
         $user = $user ?: auth()->user();
+
+        if (!$user) return false;
+
         return $this->favorites()->where('user_id', $user->id)->exists();
     }
 }

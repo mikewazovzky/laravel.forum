@@ -15,10 +15,15 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         \View::composer('*', function($view) {
-            $view->with('channels', Channel::all());      
+            // caching channel data
+            $channels = \Cache::rememberForever('channel', function() {
+                return Channel::all();
+            });
+
+            $view->with('channels', $channels);      
         });
 
-        // Runs before DatabaseMigration trait in testing class
+        // Runs before DatabaseMigration trait in testing class, need to revert to View::composer
         // \View::share('channels', Channel::all());
     }
 
@@ -29,6 +34,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        if ($this->app->isLocal()) {
+            $this->app->register(\Barryvdh\Debugbar\ServiceProvider::class);
+        }
     }
 }
