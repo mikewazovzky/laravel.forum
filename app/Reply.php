@@ -6,35 +6,25 @@ use Illuminate\Database\Eloquent\Model;
 
 class Reply extends Model
 {
+    use Favoritable;
+
     protected $fillable = ['user_id', 'body'];
+    // Specified relations will eager load everytime we fetch a reply
+    protected $with = ['owner'];
+
+    protected static function boot()
+    {
+        parent::boot();
+        // To turn off eager loading
+        // App\Thread::withoutGlobalScope('favorites')->all() 
+        // App\Thread::withoutGlobalScopes()->all()
+        static::addGlobalScope('favorites', function($builder) {
+            return $builder->with('favorites');
+        });
+    }
 
     public function owner()
     {
         return $this->belongsTo(User::class, 'user_id');
-    }
-
-    public function favorites()
-    {
-        return $this->morphMany(Favorite::class, 'favorited');
-    }
-
-    public function favorite($user)
-    {
-        $attributes = [ 'user_id' => $user->id ];
-        
-        if(! $this->favorites()->where($attributes)->exists() ) {
-            return $this->favorites()->create($attributes);
-        }            
-        
-        return null;
-    }
-
-    public function isFavorited($user = null)
-    {
-        $user = $user ?: auth()->user();
-
-        if (!$user) return false;
-
-        return $this->favorites()->where('user_id', $user->id)->exists();
     }
 }
