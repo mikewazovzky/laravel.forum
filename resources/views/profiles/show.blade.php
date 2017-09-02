@@ -17,8 +17,7 @@
                         <div class="panel-heading">
                             <div class="level">
                                 <span class="flex">
-                                    <a href="#">{{ $thread->user->name }}</a> posted:
-                                    {{ $thread->title }}                            
+                                    {{ $thread->user->name }} posted <a href="{{ $thread->path() }}">{{ $thread->title }}</a>                            
                                 </span>
                                 <span>{{ $thread->created_at->diffForHumans() }}</span>
                             </div>
