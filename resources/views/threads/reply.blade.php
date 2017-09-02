@@ -2,7 +2,7 @@
     <div class="panel-heading">
         <div class="level">
             <h5 class="flex">
-                <a href="#">{{ $reply->owner->name }}</a> wrote 
+                <a href="{{ route('profile', $reply->owner) }}">{{ $reply->owner->name }}</a> wrote 
                 <em>{{ $reply->created_at->diffForHumans() }}</em>...                  
             </h5>
             <form method="POST" action="/replies/{{ $reply->id}}/favorites" >
