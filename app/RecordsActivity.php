@@ -12,10 +12,14 @@ trait RecordsActivity {
         if (auth()->guest()) return;
         
         foreach (static::geActivitiesToRecord() as $event) {
-            static::created(function($thread) use ($event) {
-                $thread->recordActivity($event);
+            static::created(function($model) use ($event) {
+                $model->recordActivity($event);
             });
         }
+
+        static::deleting(function($model) {
+            $model->activity()->delete();
+        });
     }
 
     // return array of Model events to be recorded as activities

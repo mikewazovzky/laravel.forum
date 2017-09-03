@@ -22,6 +22,7 @@ class ProfileTest extends TestCase
     public function profiles_display_all_threads_created_by_associated_user()
     {
         $this->signIn();
+        
         $threadNotByUser = create('App\Thread');        
         $threadByUser = create('App\Thread', ['user_id' => auth()->id()]);
         // need to change user for create_thread activity as its value

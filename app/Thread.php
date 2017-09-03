@@ -21,8 +21,26 @@ class Thread extends Model
         });
         
         // Model events: delete associated replies when model:deleting event is fired off
+        // 
         static::deleting(function($thread) {
-            $thread->replies()->delete();
+            // $thread->replies()->delete();
+
+            // The code above doesn't fire deleting event on reply model 
+            // to delete asspciated reply activity, 
+            // because reply models are not fetched,  
+            // just a database query is creted to delete replies
+
+            // Option 1. 
+            // Fetch replies (models) and delete them
+            // $thread->replies->each(function($reply) {
+            //     $reply->delete();
+            // });
+
+            // Option 2. 
+            // Higher order messaging on Laravel collection, use 'each' pseudo prop  
+            $thread->replies->each->delete();
+
+
         });
     }
    
