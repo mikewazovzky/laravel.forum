@@ -10,6 +10,7 @@ trait RecordsActivity {
     protected static function bootRecordsActivity()
     {
         if (auth()->guest()) return;
+        
         foreach (static::geActivitiesToRecord() as $event) {
             static::created(function($thread) use ($event) {
                 $thread->recordActivity($event);

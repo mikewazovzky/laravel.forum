@@ -21,11 +21,14 @@ class ProfileTest extends TestCase
     /** @test */
     public function profiles_display_all_threads_created_by_associated_user()
     {
-        $user = create('App\User');
-        $threadByUser = create('App\Thread', ['user_id' => $user->id]);
-        $threadNotByUser = create('App\Thread');
+        $this->signIn();
+        $threadNotByUser = create('App\Thread');        
+        $threadByUser = create('App\Thread', ['user_id' => auth()->id()]);
+        // need to change user for create_thread activity as its value
+        // is set to auth()->user() even if thread->user_id is different
+        auth()->user()->activities()->first()->update(['user_id' => 999]);
 
-        $this->get('/profiles/' . $user->name)
+        $this->get('/profiles/' . auth()->user()->name)
             ->assertSee($threadByUser->title)
             ->assertSee($threadByUser->body)
             ->assertDontSee($threadNotByUser->title);

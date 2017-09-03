@@ -12,22 +12,13 @@
             </div>   
 
             <section>
-                @foreach($threads as $thread)
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <div class="level">
-                                <span class="flex">
-                                    {{ $thread->user->name }} posted <a href="{{ $thread->path() }}">{{ $thread->title }}</a>                            
-                                </span>
-                                <span>{{ $thread->created_at->diffForHumans() }}</span>
-                            </div>
-                        </div>
-                        <div class="panel-body">
-                            {{ $thread->body }}
-                        </div>
-                    </div>
+                @foreach($activities as $date => $dataSet)
+                    <h3 class="page-header">{{ $date }}</h3> 
+                    @foreach($dataSet as $activity)
+                        @include("profiles.activities.{$activity->type}")
+                    @endforeach
                 @endforeach  
-                {{ $threads->links() }}      
+
             </section>
         </div>
     </div>
