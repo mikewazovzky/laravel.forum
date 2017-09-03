@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Thread extends Model
 {
+    use RecordsActivity;
+    
     protected $fillable = [ 'user_id', 'channel_id', 'title', 'body'];
     protected $with = ['user', 'channel'];
 
@@ -23,7 +25,7 @@ class Thread extends Model
             $thread->replies()->delete();
         });
     }
-    
+   
     public function path()
     {
         // return '/threads/' . $this->channel->slug . '/' . $this->id;

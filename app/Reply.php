@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Reply extends Model
 {
     use Favoritable;
+    use RecordsActivity;
 
     protected $fillable = ['user_id', 'body'];
     // Specified relations will eager load everytime we fetch a reply
