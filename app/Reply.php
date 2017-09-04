@@ -10,8 +10,13 @@ class Reply extends Model
     use RecordsActivity;
 
     protected $fillable = ['user_id', 'body'];
+    
     // Specified relations will eager load everytime we fetch a reply
     protected $with = ['owner'];
+
+    // Specifies list of custom attributes that will be appended to Model
+    // when casted toArray or to JSON object
+    protected $appends = ['favoritesCount', 'isFavorited'];
 
     protected static function boot()
     {
