@@ -39,6 +39,13 @@ if (token) {
 
 window.Vue = require('vue');
 
+// Single point to manage authorization for frontend
+Vue.prototype.authorize = function(handler) {
+    // Added here additional logic, e.g. for admin priveledges
+    const user = window.App.user;
+    return user ? handler(user) : false;
+};
+
 window.events = new Vue();
 
 window.flash = function (message) {
