@@ -25,8 +25,15 @@
                     this.body = this.attributes.body;
                     console.log(error);
                 });
+            },
 
-
+            destroy() {
+                axios.delete(`/replies/${this.attributes.id}`)
+                    .then( response => { 
+                        $(this.$el).fadeOut(300, () => 
+                            flash('Your replay has been deleted.')
+                        );
+                    });
             }
         }
     };

@@ -42445,6 +42445,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this.body = _this.attributes.body;
                 console.log(error);
             });
+        },
+        destroy: function destroy() {
+            var _this2 = this;
+
+            axios.delete('/replies/' + this.attributes.id).then(function (response) {
+                $(_this2.$el).fadeOut(300, function () {
+                    return flash('Your replay has been deleted.');
+                });
+            });
         }
     }
 });
