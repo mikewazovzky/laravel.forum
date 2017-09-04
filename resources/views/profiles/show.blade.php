@@ -15,7 +15,9 @@
                 @foreach($activities as $date => $dataSet)
                     <h3 class="page-header">{{ $date }}</h3> 
                     @foreach($dataSet as $activity)
-                        @include("profiles.activities.{$activity->type}")
+                        @if(view()->exists("profiles.activities.{$activity->type}"))
+                            @include("profiles.activities.{$activity->type}")
+                        @endif
                     @endforeach
                 @endforeach  
 
