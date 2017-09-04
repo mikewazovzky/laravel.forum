@@ -73,4 +73,42 @@ class ParticipateInThreadTest extends TestCase
         
         $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
     }
+
+    /** @test */ 
+    public function unauthorized_users_can_not_update_replies()
+    {
+        $this->withExceptionHandling();
+
+        $reply = create('App\Reply');
+        $updatedReply = 'Updated reply body';
+
+        $this->patch("/replies/{$reply->id}", ['body' => $updatedReply] )
+            ->assertRedirect('/login');
+
+        $this->signIn()
+            ->patch("/replies/{$reply->id}", ['body' => $updatedReply] )
+            ->assertStatus(403);
+
+        $this->assertDatabaseMissing('replies', [
+            'id' => $reply->id,
+            'body' => $updatedReply
+        ]);
+
+    }
+    /** @test */ 
+    public function authorized_users_can_update_replies()
+    {
+        $this->signIn();
+
+        $reply = create('App\Reply', ['user_id' => auth()->id()]);
+        $updatedReply = 'Updated reply body';
+
+        $this->patch("/replies/{$reply->id}", ['body' => $updatedReply] )
+            ->assertStatus(302);
+        
+        $this->assertDatabaseHas('replies', [
+            'id' => $reply->id,
+            'body' => $updatedReply
+        ]);
+    }
 }
