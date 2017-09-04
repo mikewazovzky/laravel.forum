@@ -12,14 +12,16 @@
             </div>   
 
             <section>
-                @foreach($activities as $date => $dataSet)
+                @forelse($activities as $date => $dataSet)
                     <h3 class="page-header">{{ $date }}</h3> 
                     @foreach($dataSet as $activity)
                         @if(view()->exists("profiles.activities.{$activity->type}"))
                             @include("profiles.activities.{$activity->type}")
                         @endif
                     @endforeach
-                @endforeach  
+                @empty
+                    <p>There is no activities recoreded for the user at the moment.</p>
+                @endforelse  
 
             </section>
         </div>
