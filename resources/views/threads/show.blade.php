@@ -27,21 +27,11 @@
                     </div>
                 </div>
 
-                <replies :data="{{ $thread->replies }}" @removed="repliesCount--"></replies>
-
-                <!-- Pagination -->
-
-                @if(auth()->check())
-                    <form method="POST" action="{{ $thread->path() . '/replies'}}">
-                        {{ csrf_field() }}
-                        <div class="form-group">
-                            <textarea class="form-control" name="body" placeholder="post a reply..."  rows="4"></textarea>
-                        </div>
-                        <button class="btn btn-primary">Submit</button>
-                    </form>
-                @else
-                    <p class="text-center">Pls. <a href="{{ route('login') }}">sign in</a> to participate in this discussion.</p>     
-                @endif            
+                <replies :data="{{ $thread->replies }}" 
+                    @added="repliesCount++"
+                    @removed="repliesCount--">
+                </replies>
+                <!-- Pagination -->       
             </div><!-- col-md-8 -->
 
             <div class="col-md-4">
