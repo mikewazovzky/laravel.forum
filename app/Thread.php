@@ -16,9 +16,10 @@ class Thread extends Model
         parent::boot();
 
         // Global Query Scope
-        static::addGlobalScope('replyCount', function($builder) {
-            return $builder->withCount('replies');
-        });
+        // static::addGlobalScope('replyCount', function($builder) {
+        //     return $builder->withCount('replies');
+        // });
+        // replies_count field added to database
         
         // Model events: delete associated replies when model:deleting event is fired off
         // 
