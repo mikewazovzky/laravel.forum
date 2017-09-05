@@ -12,8 +12,6 @@
 
 <script>
     export default {
-        props: ['endpoint'],
-        
         data() {
             return {
                 body: ''
@@ -23,6 +21,10 @@
         computed: {
             signedIn() {
                 return window.App.signedIn;
+            },
+
+            endpoint() {
+                return location.pathname + '/replies';
             }
         },
 

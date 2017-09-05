@@ -93,4 +93,16 @@ class ReadThreadsTest extends TestCase
         // They should come in proper order
         $this->assertEquals([3, 2, 0], array_column($response, 'replies_count'));   
     }    
+
+    /** @test */
+    public function a_user_can_get_all_replies_for_a_thread($value='')
+    {
+        $thread = create('App\Thread');
+        $reply = create('App\Reply', ['thread_id' => $thread->id], 7);
+
+        $response = $this->getJson($thread->path() . '/replies')->json();
+
+        $this->assertCount(1, $response['data']);
+        $this->assertEquals(7, $response['total']);
+    }
 }

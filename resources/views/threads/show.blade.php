@@ -27,11 +27,7 @@
                     </div>
                 </div>
 
-                <replies :data="{{ $thread->replies }}" 
-                    @added="repliesCount++"
-                    @removed="repliesCount--">
-                </replies>
-                <!-- Pagination -->       
+                <replies @added="repliesCount++" @removed="repliesCount--"></replies>
             </div><!-- col-md-8 -->
 
             <div class="col-md-4">
