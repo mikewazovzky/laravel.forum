@@ -11,21 +11,11 @@ class ReplyPolicy
     use HandlesAuthorization;
 
     /**
-     * Create a new policy instance.
+     *  Determine if the authenticated user has permission to update a reply.
      *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can update the thread.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Reply  $reply
-     * @return mixed
+     * @param  \App\User    $user
+     * @param  \App\Reply   $reply
+     * @return bool
      */
     public function update(User $user, Reply $reply)
     {

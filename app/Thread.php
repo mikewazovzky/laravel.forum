@@ -8,9 +8,25 @@ class Thread extends Model
 {
     use RecordsActivity;
     
+    /**
+     * Auto-apply mass assignment protection.
+     *
+     * @var array
+     */
     protected $fillable = [ 'user_id', 'channel_id', 'title', 'body'];
+
+
+    /**
+     * The relationships to always eager-load.
+     *
+     * @var array
+     */
     protected $with = ['user', 'channel'];
 
+
+    /**
+     * Boot the model.
+     */
     protected static function boot()
     {
         parent::boot();
@@ -40,54 +56,94 @@ class Thread extends Model
             // Option 2. 
             // Higher order messaging on Laravel collection, use 'each' pseudo prop  
             $thread->replies->each->delete();
-
-
         });
     }
    
+
+    /**
+     * Get a string path for the thread.
+     *
+     * @return string
+     */
     public function path()
     {
         // return '/threads/' . $this->channel->slug . '/' . $this->id;
         return "/threads/{$this->channel->slug}/{$this->id}";
     }
 
+    /**
+     * A thread belongs to a user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-    
+
+    /**
+     * A thread is assigned a channel.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function channel()
     {
         return $this->belongsTo(Channel::class);
     }
+
     /**
-     * Function description
+     * A thread may have many replies.
      *
-     * @param type name
-     * @return type 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function replies()
     {
         return $this->hasMany(Reply::class);
     }
 
+    /**
+     * Add a reply to the thread.
+     *
+     * @param  array $reply
+     * @return Model
+     */
     public function addReply($reply)
     {
         return $this->replies()->create($reply);
     }
 
+    /**
+     * Apply all relevant thread filters.
+     *
+     * @param  Builder       $query
+     * @param  ThreadFilters $filters
+     * @return Builder
+     */
     public function scopeFilter($query, $filters)
     {
         return $filters->apply($query);
     }
 
+    /**
+     * Subscribe a user to the current thread.
+     *
+     * @param  User|null $userId
+     * @return $this
+     */
     public function subscribe($user = null)
     {
         $this->subscriptions()->create([
             'user_id' => $user ? $user->id : auth()->id()
         ]);
+
+        return $this;
     }
 
+    /**
+     * Unsubscribe a user from the current thread.
+     *
+     * @param User|null $userId
+     */
     public function unsubscribe($user = null)
     {
         $this->subscriptions()
@@ -95,9 +151,13 @@ class Thread extends Model
             ->delete();
     }    
 
+    /**
+     * A thread can have many subscriptions.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function subscriptions()
     {
         return $this->hasMany(ThreadSubscription::class);
     }
-
 }

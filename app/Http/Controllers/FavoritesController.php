@@ -3,16 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Reply;
-// use App\Favorite;
-use Illuminate\Http\Request;
 
 class FavoritesController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     */
     public function __construct()
     {
         $this->middleware('auth');
     }
 
+    /**
+     * Store a new favorite in the database.
+     *
+     * @param  Reply $reply
+     */
     public function store(Reply $reply)
     {
         // Favorite::create([
@@ -25,9 +31,18 @@ class FavoritesController extends Controller
         
         $reply->favorite(auth()->user());
 
+        if (request()->expectsJson()) {
+            return response(['status' => 'Reply favorited']);
+        }
+
         return back();
     }
 
+    /**
+     * Delete the favorite.
+     *
+     * @param Reply $reply
+     */
     public function destroy(Reply $reply)
     {
         $reply->unfavorite(auth()->user());

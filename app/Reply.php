@@ -9,15 +9,32 @@ class Reply extends Model
     use Favoritable;
     use RecordsActivity;
 
+    /**
+     * Auto-apply mass assignment protection.
+     *
+     * @var array
+     */
     protected $fillable = ['user_id', 'body'];
     
-    // Specified relations will eager load everytime we fetch a reply
+    /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
     protected $with = ['owner'];
 
-    // Specifies list of custom attributes that will be appended to Model
-    // when casted toArray or to JSON object
+    /**
+     * The accessors to append to the model's array form.
+     * Specifies list of custom attributes that will be appended when 
+     * model is casted toArray or to JSON object
+     *
+     * @var array
+     */
     protected $appends = ['favoritesCount', 'isFavorited'];
 
+    /**
+     * Boot the reply instance.
+     */
     protected static function boot()
     {
         parent::boot();
@@ -38,16 +55,31 @@ class Reply extends Model
 
     }
 
+    /**
+     * A reply has an owner.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function owner()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    /**
+     * A reply belongs to a thread.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function thread()
     {
         return $this->belongsTo(Thread::class);
     }
 
+    /**
+     * Determine the path to the reply.
+     *
+     * @return string
+     */
     public function path()
     {
         return $this->thread->path() . '#reply-' . $this->id;

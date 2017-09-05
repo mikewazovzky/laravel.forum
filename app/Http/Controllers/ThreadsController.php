@@ -9,6 +9,9 @@ use Illuminate\Http\Request;
 
 class ThreadsController extends Controller
 {
+    /**
+     * Create a new ThreadsController instance.
+     */
     public function __construct()
     {
         $this->middleware('auth')->except(['index', 'show']);
@@ -16,7 +19,9 @@ class ThreadsController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param Channel      $channel
+     * @param ThreadFilters $filters
+     * @return \Illuminate\Database\Eloquent\Collection | \Illuminate\Http\Response
      */
     public function index(Channel $channel, ThreadFilters $filters)
     {
@@ -68,6 +73,7 @@ class ThreadsController extends Controller
     /**
      * Display the specified resource.
      *
+     * @param  integer      $channel
      * @param  \App\Thread  $thread
      * @return \Illuminate\Http\Response
      */
@@ -105,10 +111,11 @@ class ThreadsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * @param  integer      $channelId
      * @param  \App\Thread  $thread
      * @return \Illuminate\Http\Response
      */
-    public function destroy($channel, Thread $thread)
+    public function destroy($channelId, Thread $thread)
     {
         // Check user permissions
 
@@ -142,6 +149,13 @@ class ThreadsController extends Controller
             ->with('flash', 'Your thread has been deleted!');
     }
 
+    /**
+     * Fetch all relevant threads.
+     *
+     * @param Channel       $channel
+     * @param ThreadFilters $filters
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
     protected function getThreads($channel, $filters)
     {
         $threads = Thread::filter($filters)->latest();
