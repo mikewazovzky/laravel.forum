@@ -13,17 +13,14 @@ class ParticipateInThreadTest extends TestCase
     public function an_authenticated_user_can_participate_in_a_thread()
     {
         // Given we have an authenticated user and ...
-        $this->be($user = factory('App\User')->create());         
+        $this->signIn();         
         // ... existing thread
-        $thread = factory('App\Thread')->create();
-
+        $thread = create('App\Thread');
         // When user posts a reply: post to '/threads/id/replies'
         $reply = factory('App\Reply')->make();
         $this->post($thread->path() . '/replies', $reply->toArray());
-
         // Then the reply should be visible on thread page 
-        $this->get($thread->path())
-            ->assertSee($reply->body);
+        $this->assertDatabaseHas('replies', [ 'body' => $reply->body ]);
     }
 
     /** @test */

@@ -34,18 +34,6 @@ class ReadThreadsTest extends TestCase
     }
 
     /** @test */
-    public function a_user_can_read_replies_associated_with_the_thread()
-    {
-        // Given we have a thread with reply(-ies)
-        $reply = factory('App\Reply')
-            ->create([ 'thread_id' => $this->thread->id ]);
-        // When we hit a thread page
-        // Then we should see a reply body
-        $this->get($this->thread->path())
-            ->assertSee($reply->body);
-    }
-
-    /** @test */
     public function a_user_can_filter_threads_by_a_channel()
     {
         $channel = create('App\Channel');
@@ -98,11 +86,11 @@ class ReadThreadsTest extends TestCase
     public function a_user_can_get_all_replies_for_a_thread($value='')
     {
         $thread = create('App\Thread');
-        $reply = create('App\Reply', ['thread_id' => $thread->id], 7);
+        $reply = create('App\Reply', ['thread_id' => $thread->id], 40);
 
         $response = $this->getJson($thread->path() . '/replies')->json();
 
-        $this->assertCount(1, $response['data']);
-        $this->assertEquals(7, $response['total']);
+        $this->assertCount(20, $response['data']); // paginated to chunks of 20
+        $this->assertEquals(40, $response['total']); // total number of replies
     }
 }
