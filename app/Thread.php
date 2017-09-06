@@ -160,4 +160,27 @@ class Thread extends Model
     {
         return $this->hasMany(ThreadSubscription::class);
     }
+
+    /**
+     * Check if a user is subscribed to the thread 
+     *
+     * @param User|null
+     * @return bool
+     */
+    public function isSubscribedTo($user = null)
+    {
+        $user = $user ? $user : auth()->user();
+        return $this->subscriptions()->where('user_id', $user->id)->exists();
+    }
+
+    /**
+     * Attribute specifies if a user is subscribed to the thread 
+     *
+     * @param User|null
+     * @return bool
+     */
+    public function getIsSubscribedToAttribute()
+    {
+        return $this->isSubscribedTo();
+    }    
 }

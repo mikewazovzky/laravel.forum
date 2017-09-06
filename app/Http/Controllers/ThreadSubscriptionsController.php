@@ -26,4 +26,16 @@ class ThreadSubscriptionsController extends Controller
     {
         $thread->subscribe(auth()->user());
     }
+
+    /**
+     * Remove the specified tread subscription from storage.
+     *
+     * @param  integer      $channelId
+     * @param  \App\Thread  $thread
+     * @return void
+     */
+    public function destroy($channelId, Thread $thread)
+    {
+        $thread->unsubscribe(auth()->user());
+    }
 }

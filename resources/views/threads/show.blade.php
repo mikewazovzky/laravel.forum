@@ -40,6 +40,10 @@
                             and currently has <span v-text="repliesCount"></span>
                             {{ str_plural('reply', $thread->replies_count) }}.                      
                         </p>
+                        <p>
+                            {{-- <subscribe-button :subscribed="{{ $thread->isSubscribedTo ? 'true' : 'false'}}"></subscribe-button> --}}
+                            <subscribe-button :subscribed="{{ json_encode($thread->isSubscribedTo) }}"></subscribe-button>                   
+                        </p>
                     </div>
                 </div>
             </div>       
