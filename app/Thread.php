@@ -109,7 +109,30 @@ class Thread extends Model
      */
     public function addReply($reply)
     {
-        return $this->replies()->create($reply);
+        $reply =  $this->replies()->create($reply);
+
+        // Prepare notifications for all subscribers
+        // foreach($this->subscriptions as $subscription) {
+        //     if($subscription->user_id != $reply->user_id) {
+        //         $subscription->user->notify(new ThreadWasUpdated($this, $reply));
+        //     }           
+        // }
+
+        // $this->subscriptions
+        //     ->filter(function($subscription) use ($reply) {
+        //         return $subscription->user_id != $reply->user_id;
+        //     })
+        //     ->each(function($subscription) use($reply) {
+        //         $subscription->user->notify(new ThreadWasUpdated($this, $reply));
+        //     });
+
+        $this->subscriptions
+            ->filter(function($subscription) use ($reply) {
+                return $subscription->user_id != $reply->user_id;
+            })
+            ->each->notify($reply);
+ 
+        return $reply;
     }
 
     /**
@@ -169,8 +192,8 @@ class Thread extends Model
      */
     public function isSubscribedTo($user = null)
     {
-        $user = $user ? $user : auth()->user();
-        return $this->subscriptions()->where('user_id', $user->id)->exists();
+        $userId = $user ? $user->id : ( auth()->check() ? auth()->id() : null);
+        return $this->subscriptions()->where('user_id', $userId)->exists();
     }
 
     /**
