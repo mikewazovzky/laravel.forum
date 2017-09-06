@@ -28,7 +28,7 @@ class ThreadSubscription extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function thrad()
+    public function thread()
     {
         return $this->belongsTo(Thread::class);
     }
