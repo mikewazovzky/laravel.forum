@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Filters\ThreadFilters;
 use App\Channel;
 use App\Thread;
@@ -79,6 +80,14 @@ class ThreadsController extends Controller
      */
     public function show($channelId, Thread $thread)
     {
+        // Record that the user visited this page
+        // Record the timestamp when he did it   
+        if (auth()->check()) {
+            // $key = sprintf("users.%s.visit.%s", auth()->id(), $thread->id);
+            // cache()->forever($key, Carbon::now());
+            auth()->user()->readThread($thread);            
+        }   
+        
         return view('threads.show', [ 
             'thread' => $thread->append('isSubscribedTo'),
             // 'replies' => $thread->replies()->paginate(20) // Now fetched by vue component

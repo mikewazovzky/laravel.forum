@@ -223,4 +223,16 @@ class Thread extends Model
     {
         return $this->isSubscribedTo();
     }    
+
+    public function hasUpdatesFor($user = null)
+    {
+        $user = $user ?: auth()->user();
+
+        // Look in the cash for the proper key
+        // compare that element (carbon instance) with $thread->updated_at 
+        // $key = auth()->user()->visitedThreadCacheKey($this);
+        return $this->updated_at > cache(
+            $key = auth()->user()->visitedThreadCacheKey($this)
+        );
+    }
 }
