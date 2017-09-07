@@ -112,6 +112,8 @@ class Thread extends Model
         $reply =  $this->replies()->create($reply);
 
         // Prepare notifications for all subscribers
+        // Refactoring stages/options
+
         // foreach($this->subscriptions as $subscription) {
         //     if($subscription->user_id != $reply->user_id) {
         //         $subscription->user->notify(new ThreadWasUpdated($this, $reply));
