@@ -132,12 +132,22 @@ class Thread extends Model
         //     })
         //     ->each->notify($reply);
 
-         $this->subscriptions
+        // $this->subscriptions
+        //     ->where('user_id',  '!=',  $reply->user_id)
+        //     ->each
+        //     ->notify($reply);
+
+        $this->notifySubscribers($reply);
+
+        return $reply;
+    }
+
+    protected function notifySubscribers($reply)
+    {
+        $this->subscriptions
             ->where('user_id',  '!=',  $reply->user_id)
             ->each
             ->notify($reply);
-
-        return $reply;
     }
 
     /**
