@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Spam;
 use App\Thread;
 use App\Reply;
 use Illuminate\Http\Request;
@@ -36,11 +37,10 @@ class RepliesController extends Controller
      * @param  Request  $form
      * @return \Illuminate\Database\Eloquent\Model | \Illuminate\Http\RedirectResponse
      */
-    public function store($channelId, Thread $thread, Request $request)
+    public function store($channelId, Thread $thread, Request $request, Spam $spam)
     {
-        $this->validate($request, [
-            'body' => 'required'
-        ]);
+        $this->validate($request, ['body' => 'required']);
+        $spam->detect(request('body'));
 
         $reply = $thread->addReply([
             'user_id' => auth()->id(),

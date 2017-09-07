@@ -110,4 +110,22 @@ class ParticipateInThreadTest extends TestCase
             'body' => $updatedReply
         ]);
     }
+
+    /** @test */
+    public function reply_that_contains_spam_may_not_be_created()
+    {
+        // Given we have an authenticated user and a thread and a reply
+        $this->signIn();         
+        $thread = create('App\Thread');
+
+        // When user posts a reply containing a spam
+        $spam = 'Yahoo Customer Support';     
+        $reply = make('App\Reply', ['body' => $spam]);     
+
+        // Then an Exception has to be thrown
+        $this->expectException(\Exception::class);
+        $this->post($thread->path() . '/replies', $reply->toArray());
+        // .. and reply should not be saved to database         
+        $this->assertDatabaseMissing('replies', [ 'body' => $spam ]);
+    }
 }
