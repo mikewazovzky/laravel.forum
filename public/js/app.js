@@ -16535,7 +16535,9 @@ Vue.prototype.authorize = function (handler) {
 window.events = new Vue();
 
 window.flash = function (message) {
-    window.events.$emit('flash', message);
+    var level = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'success';
+
+    window.events.$emit('flash', { message: message, level: level });
 };
 
 /***/ }),
@@ -57864,12 +57866,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['message'],
     data: function data() {
         return {
             body: '',
+            level: 'success',
             show: false
         };
     },
@@ -57877,18 +57883,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         var _this = this;
 
         if (this.message) {
-            this.flash(this.message);
+            this.flash({ message: this.message, level: 'success' });
         }
 
-        window.events.$on('flash', function (message) {
-            return _this.flash(message);
+        window.events.$on('flash', function (data) {
+            return _this.flash(data);
         });
     },
 
 
     methods: {
-        flash: function flash(message) {
-            this.body = message;
+        flash: function flash(data) {
+            this.body = data.message;
+            this.level = data.level;
             this.show = true;
 
             this.hide();
@@ -57915,15 +57922,15 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       value: (_vm.show),
       expression: "show"
     }],
-    staticClass: "alert alert-success alert-flash",
+    staticClass: "alert alert-flash",
+    class: 'alert-' + _vm.level,
     attrs: {
       "role": "alert"
-    }
-  }, [_c('strong', [_vm._v("Success!")]), _vm._v(" "), _c('span', {
+    },
     domProps: {
       "textContent": _vm._s(_vm.body)
     }
-  }), _vm._v(".\n")])
+  })
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -58535,7 +58542,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 flash('Your reply\'s been updated.');
             }).catch(function (error) {
                 _this2.body = _this2.data.body;
-                console.log(error);
+                flash('ERROR ' + error.response.status + ': ' + error.response.data, 'danger');
             });
         },
         destroy: function destroy() {
@@ -59097,6 +59104,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.post(this.endpoint, { body: this.body }).then(function (response) {
                 _this.body = '';
                 _this.$emit('created', response.data);
+            }).catch(function (error) {
+                _this.body = '';
+                flash('ERROR ' + error.response.status + ': ' + error.response.data, 'danger');
             });
         }
     }

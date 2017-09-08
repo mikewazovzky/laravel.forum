@@ -39,19 +39,25 @@ class RepliesController extends Controller
      */
     public function store($channelId, Thread $thread, Request $request, Spam $spam)
     {
-        $this->validateReply();
+        try {
+             $this->validateReply();
 
-        $reply = $thread->addReply([
-            'user_id' => auth()->id(),
-            'body' => $request->body
-        ]);
-
-        if ($request->expectsJson()) {
-            return $reply->load('owner');
+            $reply = $thread->addReply([
+                'user_id' => auth()->id(),
+                'body' => $request->body
+            ]);           
+        } catch (\Exception $e) {
+            // 422 - unprocessable entity
+            return response('Sorry! Your reply could not be saved at this time.', 422);
         }
 
-        return back()
-            ->with('flash', 'Your reply has been posted!');
+        // if ($request->expectsJson()) {
+        //     return $reply->load('owner');
+        // }
+        // return back()->with('flash', 'Your reply has been posted!');
+
+        // We only store replies via ajax request now
+        return $reply->load('owner');
     }
 
     /**
@@ -63,15 +69,22 @@ class RepliesController extends Controller
     {
         $this->authorize('update', $reply);
 
-        $this->validateReply();
+        try {
+            $this->validateReply();
 
-        $reply->update(request(['body']));
-
-        if(request()->expectsJson()) {
-            return response(['status' => 'Reply updated']);
+            $reply->update(request(['body']));
+        } catch (\Exception $e) {
+            // 422 - unprocessable entity
+            return response('Sorry! Your reply could not be saved at this time.', 422);
         }
 
-        return back();
+        // if(request()->expectsJson()) {
+        //     return response(['status' => 'Reply updated']);
+        // }
+        // return back();
+
+        // We only update replies via ajax request now
+        return response(['status' => 'Reply updated']);
     }
 
     /**

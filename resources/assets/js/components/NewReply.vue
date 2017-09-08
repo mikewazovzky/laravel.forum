@@ -34,7 +34,11 @@
                     .then(response => {
                         this.body = '';
                         this.$emit('created', response.data);
-                    });                
+                    })
+                    .catch(error => {
+                        this.body = '';
+                        flash(`ERROR ${error.response.status}: ${error.response.data}`, 'danger');
+                    });
             }
         }
     }

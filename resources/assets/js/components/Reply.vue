@@ -80,7 +80,7 @@
                 })
                 .catch( (error) => {
                     this.body = this.data.body;
-                    console.log(error);
+                    flash(`ERROR ${error.response.status}: ${error.response.data}`, 'danger');
                 });
             },
 
