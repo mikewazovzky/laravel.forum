@@ -15,11 +15,13 @@
 
         <div class="panel-body">
             <div v-if="editing">
-                <div class="form-group">
-                    <textarea class="form-control" v-model="body"></textarea>
-                </div>                
-                <button class="btn btn-primary btn-xs" @click="update">Update</button>
-                <button class="btn btn-xs" @click="cancel">Cancel</button>
+                <form @submit.prevent="update">
+                    <div class="form-group">
+                        <textarea class="form-control" v-model="body" required></textarea>
+                    </div>                
+                    <button class="btn btn-primary btn-xs">Update</button>
+                    <button type="button" class="btn btn-xs" @click="cancel">Cancel</button>                    
+                </form>
             </div>      
             <div v-else v-text="body"></div>
         </div>
@@ -58,11 +60,7 @@
             },
 
             canUpdate() {
-                // if (!window.App.user) return false;
-                // return this.data.user_id == window.App.user.id;
-
-                // Vue.authorize() is available globally
-                return this.authorize( user => this.data.user_id == user.id);
+                return this.authorize(user => this.data.user_id == user.id);
             }
         },
 
@@ -74,26 +72,19 @@
 
             update() {
                 axios.patch(`/replies/${this.data.id}`, { body: this.body })
-                .then( () => {
-                    this.editing = false;
-                    flash('Your reply\'s been updated.');                    
-                })
-                .catch( (error) => {
-                    this.body = this.data.body;
-                    flash(`ERROR ${error.response.status}: ${error.response.data}`, 'danger');
-                });
+                    .then(() => {
+                        this.editing = false;
+                        flash('Your reply\'s been updated.');
+                    })
+                    .catch((error) => {
+                        this.body = this.data.body;
+                        flash(`ERROR ${error.response.status}: ${error.response.data}`, 'danger');
+                    });
             },
 
             destroy() {
                 axios.delete(`/replies/${this.id}`)
-                    .then( response => { 
-
-                        // $(this.$el).fadeOut(300, () => 
-                        //     flash('Your replay has been deleted.')
-                        // );
-
-                        this.$emit('deleted', this.data.id);
-                    });
+                    .then(response => this.$emit('deleted', this.data.id));
             }
         }
     };

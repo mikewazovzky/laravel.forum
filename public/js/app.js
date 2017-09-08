@@ -58491,6 +58491,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 
 
@@ -58519,10 +58521,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         canUpdate: function canUpdate() {
             var _this = this;
 
-            // if (!window.App.user) return false;
-            // return this.data.user_id == window.App.user.id;
-
-            // Vue.authorize() is available globally
             return this.authorize(function (user) {
                 return _this.data.user_id == user.id;
             });
@@ -58549,12 +58547,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this3 = this;
 
             axios.delete('/replies/' + this.id).then(function (response) {
-
-                // $(this.$el).fadeOut(300, () => 
-                //     flash('Your replay has been deleted.')
-                // );
-
-                _this3.$emit('deleted', _this3.data.id);
+                return _this3.$emit('deleted', _this3.data.id);
             });
         }
     }
@@ -58964,7 +58957,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }) : _vm._e()], 1)])]), _vm._v(" "), _c('div', {
     staticClass: "panel-body"
-  }, [(_vm.editing) ? _c('div', [_c('div', {
+  }, [(_vm.editing) ? _c('div', [_c('form', {
+    on: {
+      "submit": function($event) {
+        $event.preventDefault();
+        _vm.update($event)
+      }
+    }
+  }, [_c('div', {
     staticClass: "form-group"
   }, [_c('textarea', {
     directives: [{
@@ -58974,6 +58974,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       expression: "body"
     }],
     staticClass: "form-control",
+    attrs: {
+      "required": ""
+    },
     domProps: {
       "value": (_vm.body)
     },
@@ -58984,16 +58987,16 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }
   })]), _vm._v(" "), _c('button', {
-    staticClass: "btn btn-primary btn-xs",
-    on: {
-      "click": _vm.update
-    }
+    staticClass: "btn btn-primary btn-xs"
   }, [_vm._v("Update")]), _vm._v(" "), _c('button', {
     staticClass: "btn btn-xs",
+    attrs: {
+      "type": "button"
+    },
     on: {
       "click": _vm.cancel
     }
-  }, [_vm._v("Cancel")])]) : _c('div', {
+  }, [_vm._v("Cancel")])])]) : _c('div', {
     domProps: {
       "textContent": _vm._s(_vm.body)
     }

@@ -19,20 +19,7 @@ class NotifyMentionedUser
         User::whereIn('name', $event->reply->mentionedUsers())
             ->get()
             ->each(function($user) use ($event) {
-                if($user) {
-                    $user->notify(new YouWereMentioned($event->reply));
-                }                
+                $user->notify(new YouWereMentioned($event->reply));
             });
-
-        // collect($event->reply->mentionedUsers())
-        //     ->map(function($name) {
-        //         return User::whereName($name)->first();
-        //     })
-        //     ->filter()  // filter without arguments removes null values from collection
-        //     ->each(function($user) use ($event) {
-        //         if($user) {
-        //             $user->notify(new YouWereMentioned($event->reply));
-        //         }                
-        //     });
     }
 }
