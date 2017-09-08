@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Inspections\Spam;
 use App\Thread;
 use App\Reply;
 use Illuminate\Http\Request;
@@ -37,10 +36,10 @@ class RepliesController extends Controller
      * @param  Request  $form
      * @return \Illuminate\Database\Eloquent\Model | \Illuminate\Http\RedirectResponse
      */
-    public function store($channelId, Thread $thread, Request $request, Spam $spam)
+    public function store($channelId, Thread $thread, Request $request)
     {
         try {
-             $this->validateReply();
+            $this->validate(request(), ['body' => 'required|spamfree']);
 
             $reply = $thread->addReply([
                 'user_id' => auth()->id(),
@@ -65,12 +64,12 @@ class RepliesController extends Controller
      *
      * @param Reply $reply
      */
-    public function update(Reply $reply, Spam $spam)
+    public function update(Reply $reply)
     {
         $this->authorize('update', $reply);
 
         try {
-            $this->validateReply();
+            $this->validate(request(), ['body' => 'required|spamfree']);
 
             $reply->update(request(['body']));
         } catch (\Exception $e) {
@@ -110,10 +109,11 @@ class RepliesController extends Controller
         return back();
     }
 
-    protected function validateReply()
-    {
-        $this->validate(request(), ['body' => 'required']);
-        // resolve(Spam::class)->detect(request('body'));
-        (new Spam())->detect(request('body'));
-    }
+    // SpamFree detection transfered to validation rule
+    // protected function validateReply()
+    // {
+    //     $this->validate(request(), ['body' => 'required|spamfree']);
+    //     // (new Spam())->detect(request('body'));
+    //     // resolve(Spam::class)->detect(request('body'));
+    // }
 }

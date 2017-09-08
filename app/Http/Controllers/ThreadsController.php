@@ -56,8 +56,8 @@ class ThreadsController extends Controller
         // Validation
         $this->validate($request, [
             'channel_id' => 'required|exists:channels,id',
-            'title' => 'required',
-            'body' => 'required',
+            'title' => 'required|spamfree',
+            'body' => 'required|spamfree',
         ]);
 
         $thread = Thread::create([

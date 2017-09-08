@@ -25,6 +25,9 @@ class AppServiceProvider extends ServiceProvider
 
         // Runs before DatabaseMigration trait in testing class, need to revert to View::composer
         // \View::share('channels', Channel::all());
+
+        \Validator::extend('spamfree', 'App\Rules\SpamFree@passes');
+
     }
 
     /**

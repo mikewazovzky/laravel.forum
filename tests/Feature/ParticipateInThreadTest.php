@@ -103,7 +103,7 @@ class ParticipateInThreadTest extends TestCase
         $updatedReply = 'Updated reply body';
 
         $this->patch("/replies/{$reply->id}", ['body' => $updatedReply] )
-            ->assertStatus(302);
+            ->assertStatus(200);
         
         $this->assertDatabaseHas('replies', [
             'id' => $reply->id,
@@ -121,10 +121,9 @@ class ParticipateInThreadTest extends TestCase
         // When user posts a reply containing a spam
         $spam = 'Yahoo Customer Support';     
         $reply = make('App\Reply', ['body' => $spam]);     
-
-        // Then an Exception has to be thrown
-        $this->expectException(\Exception::class);
-        $this->post($thread->path() . '/replies', $reply->toArray());
+        $response = $this->post($thread->path() . '/replies', $reply->toArray());
+        // Then reply may not be posted
+        $response->assertStatus(422);
         // .. and reply should not be saved to database         
         $this->assertDatabaseMissing('replies', [ 'body' => $spam ]);
     }
