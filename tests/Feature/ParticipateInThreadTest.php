@@ -18,7 +18,8 @@ class ParticipateInThreadTest extends TestCase
         $thread = create('App\Thread');
         // When user posts a reply: post to '/threads/id/replies'
         $reply = factory('App\Reply')->make();
-        $this->post($thread->path() . '/replies', $reply->toArray());
+        $this->post($thread->path() . '/replies', $reply->toArray())
+            ->assertStatus(200);
         // Then the reply should be visible on thread page 
         $this->assertDatabaseHas('replies', [ 'body' => $reply->body ]);
         $this->assertEquals(1, $thread->fresh()->replies_count);
@@ -126,5 +127,17 @@ class ParticipateInThreadTest extends TestCase
         $response->assertStatus(422);
         // .. and reply should not be saved to database         
         $this->assertDatabaseMissing('replies', [ 'body' => $spam ]);
+    }
+
+    /** @test */
+    public function users_may_not_post_replies_faster_then_once_a_minute()
+    {
+        $this->signIn();         
+        $thread = create('App\Thread');
+        $reply = make('App\Reply', ['body' => 'My reply']);
+        $response = $this->post($thread->path() . '/replies', $reply->toArray())
+            ->assertStatus(200);
+        $response = $this->post($thread->path() . '/replies', $reply->toArray())
+            ->assertStatus(429);            
     }
 }

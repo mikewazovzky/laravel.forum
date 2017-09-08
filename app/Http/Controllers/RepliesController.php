@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Thread;
 use App\Reply;
-use Illuminate\Http\Request;
+// use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class RepliesController extends Controller
 {
@@ -36,15 +37,21 @@ class RepliesController extends Controller
      * @param  Request  $form
      * @return \Illuminate\Database\Eloquent\Model | \Illuminate\Http\RedirectResponse
      */
-    public function store($channelId, Thread $thread, Request $request)
+    public function store($channelId, Thread $thread)
     {
-        try {
-            $this->validate(request(), ['body' => 'required|spamfree']);
+        
+        if (Gate::denies('create', new Reply)) {
+            return response('Your are postng too frequently. Pls. take a break.', 429);
+        }
 
+        try {
+            // $this->authorize('create', new Reply());
+            $this->validate(request(), ['body' => 'required|spamfree']);
+         
             $reply = $thread->addReply([
                 'user_id' => auth()->id(),
-                'body' => $request->body
-            ]);           
+                'body' => request('body')
+            ]);     
         } catch (\Exception $e) {
             // 422 - unprocessable entity
             return response('Sorry! Your reply could not be saved at this time.', 422);
