@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Thread;
 use App\Reply;
-// use Illuminate\Http\Request;
+use App\Http\Requests\CreateReplyRequest;
 use Illuminate\Support\Facades\Gate;
 
 class RepliesController extends Controller
@@ -37,33 +37,13 @@ class RepliesController extends Controller
      * @param  Request  $form
      * @return \Illuminate\Database\Eloquent\Model | \Illuminate\Http\RedirectResponse
      */
-    public function store($channelId, Thread $thread)
+    public function store($channelId, Thread $thread, CreateReplyRequest $request)
     {
-        
-        if (Gate::denies('create', new Reply)) {
-            return response('Your are postng too frequently. Pls. take a break.', 429);
-        }
-
-        try {
-            // $this->authorize('create', new Reply());
-            $this->validate(request(), ['body' => 'required|spamfree']);
-         
-            $reply = $thread->addReply([
-                'user_id' => auth()->id(),
-                'body' => request('body')
-            ]);     
-        } catch (\Exception $e) {
-            // 422 - unprocessable entity
-            return response('Sorry! Your reply could not be saved at this time.', 422);
-        }
-
-        // if ($request->expectsJson()) {
-        //     return $reply->load('owner');
-        // }
-        // return back()->with('flash', 'Your reply has been posted!');
-
         // We only store replies via ajax request now
-        return $reply->load('owner');
+        return $thread->addReply([
+            'user_id' => auth()->id(),
+            'body' => request('body')
+        ])->load('owner');
     }
 
     /**

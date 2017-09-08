@@ -115,14 +115,16 @@ class ParticipateInThreadTest extends TestCase
     /** @test */
     public function reply_that_contains_spam_may_not_be_created()
     {
+        $this->withExceptionHandling();
         // Given we have an authenticated user and a thread and a reply
         $this->signIn();         
         $thread = create('App\Thread');
-
         // When user posts a reply containing a spam
         $spam = 'Yahoo Customer Support';     
         $reply = make('App\Reply', ['body' => $spam]);     
-        $response = $this->post($thread->path() . '/replies', $reply->toArray());
+        // $response = $this->post($thread->path() . '/replies', $reply->toArray());
+        // Request response as json
+        $response = $this->json('post', $thread->path() . '/replies', $reply->toArray());
         // Then reply may not be posted
         $response->assertStatus(422);
         // .. and reply should not be saved to database         
@@ -132,6 +134,7 @@ class ParticipateInThreadTest extends TestCase
     /** @test */
     public function users_may_not_post_replies_faster_then_once_a_minute()
     {
+        $this->withExceptionHandling();
         $this->signIn();         
         $thread = create('App\Thread');
         $reply = make('App\Reply', ['body' => 'My reply']);
