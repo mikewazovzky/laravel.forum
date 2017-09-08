@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Notifications\YouWereMentioned;
 use App\User;
 use App\Thread;
 use App\Reply;
 use App\Http\Requests\CreateReplyRequest;
-use Illuminate\Support\Facades\Gate;
 
 class RepliesController extends Controller
 {
@@ -42,22 +40,10 @@ class RepliesController extends Controller
     public function store($channelId, Thread $thread, CreateReplyRequest $request)
     {
         // We only store replies via ajax request now
-        $reply = $thread->addReply([
+        return  $thread->addReply([
             'user_id' => auth()->id(),
             'body' => request('body')
-        ]);
-
-        // Inspect reply body
-        preg_match_all('/\@([^\s\.\!\?]+)/', $reply->body, $matches);
-        // Check if users were mentioned and create and notify them
-        foreach ($matches[1] as $name) {
-            $user = User::whereName($name)->first();
-            if ($user) {
-                $user->notify(new YouWereMentioned($reply));
-            }
-        }
-
-        return $reply->load('owner');
+        ])->load('owner');
     }
 
     /**

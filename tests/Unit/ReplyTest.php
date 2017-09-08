@@ -27,4 +27,12 @@ class ReplyTest extends TestCase
         $reply->created_at = Carbon::now()->subMinutes(3);
         $this->assertFalse($reply->wasJustPublished());
     }
+
+    /** @test */
+    public function it_can_detect_all_metioned_users()
+    {
+        $reply = create('App\Reply', ['body' => 'Hello @mike, greetings from @mary!']);
+        $this->assertEquals(['mike', 'mary'], $reply->mentionedUsers());
+        
+    }
 }
