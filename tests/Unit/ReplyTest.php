@@ -32,7 +32,16 @@ class ReplyTest extends TestCase
     public function it_can_detect_all_metioned_users()
     {
         $reply = create('App\Reply', ['body' => 'Hello @mike, greetings from @mary!']);
-        $this->assertEquals(['mike', 'mary'], $reply->mentionedUsers());
-        
+        $this->assertEquals(['mike', 'mary'], $reply->mentionedUsers());        
+    }
+
+    /** @test */
+    public function it_wraps_mentioned_users_in_the_body_with_an_abcor_tags()
+    {
+        $reply = new \App\Reply(['body' => 'Hello @mike! Greetings from @mary.']);
+        $this->assertEquals(
+            'Hello <a href="/profiles/mike">@mike</a>! Greetings from <a href="/profiles/mary">@mary</a>.', 
+            $reply->body
+        ); 
     }
 }
