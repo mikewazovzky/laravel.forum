@@ -11,7 +11,7 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <style>
         body { padding-bottom: 50px; }
         .level { display: flex; align-items: center; }
@@ -26,12 +26,17 @@
             'signedIn' => Auth::check()
         ]) !!};
     </script>
+
+    @yield('header')
+
 </head>
 <body>
     <div id="app">
         @include('layouts.nav')
 
         @yield('content')
+
+        @yield('scripts')
 
         <flash message="{{ session('flash') }}"></flash>  
     </div>

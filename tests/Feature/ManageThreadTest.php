@@ -24,7 +24,6 @@ class ManageThreadTest extends TestCase
         $this->get($response->headers->get('Location'))
             ->assertSee($thread->title)
             ->assertSee($thread->body);
-        // var_dump($thread->path());
     }
 
     /** @test */
