@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Research</title>
+    <link href="css/jquery.atwho.css" rel="stylesheet">    
+</head>
+<body>
+
+<input id="at-js"type="text">
+
+<script src="http://code.jquery.com/jquery.js"></script>
+<script src="js/jquery.caret.js"></script>
+<script src="js/jquery.atwho.js"></script>
+<script>
+    const atwo = $('#at-js').atwho({
+        at: "@",
+        // data: 'http://localhost:8888/users.php'
+        delay: 400,
+        callbacks: {
+            remoteFilter(query, callback) {
+                $.getJSON('/users.php', { q: query }, function(usernames) {
+                    callback(usernames);
+                });
+            }
+        }
+    });
+</script>
+</body>
+</html>
