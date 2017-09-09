@@ -79,7 +79,7 @@ class ReadThreadsTest extends TestCase
         // dd($response);
 
         // They should come in proper order
-        $this->assertEquals([3, 2, 0], array_column($response, 'replies_count'));   
+        $this->assertEquals([3, 2, 0], array_column($response['data'], 'replies_count'));   
     }    
 
     /** @test */
@@ -95,7 +95,7 @@ class ReadThreadsTest extends TestCase
         // When we filter unanswered threads
         $response = $this->getJson('/threads?unanswered=1')->json();
         // There should be only one present
-        $this->assertCount(1, $response);
+        $this->assertCount(1, $response['data']);
     }    
 
     /** @test */
