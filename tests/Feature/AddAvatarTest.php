@@ -42,7 +42,7 @@ class AddAvatarTest extends TestCase
             'avatar' => $file = UploadedFile::fake()->image('avatar.jpg')
         ]);
 
-        $this->assertEquals('avatars/' . $file->hashName(), auth()->user()->avatar_path);
+        $this->assertEquals('/storage/avatars/' . $file->hashName(), auth()->user()->avatar_path);
 
         Storage::disk('public')->assertExists('avatars/' . $file->hashName());
     }    
@@ -52,11 +52,11 @@ class AddAvatarTest extends TestCase
     {
         $user = create('App\User');
         
-        $this->assertEquals('avatars/default.jpeg', $user->avatar());
+        $this->assertEquals('/images/default.png', $user->avatar_path);
 
         $user->update(['avatar_path' => 'avatars/me.jpeg']);
 
-        $this->assertEquals('avatars/me.jpeg', $user->avatar());
+        $this->assertEquals('/storage/avatars/me.jpeg', $user->avatar_path);
     }
 
 }
