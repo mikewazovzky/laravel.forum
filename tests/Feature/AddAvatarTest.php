@@ -47,4 +47,16 @@ class AddAvatarTest extends TestCase
         Storage::disk('public')->assertExists('avatars/' . $file->hashName());
     }    
 
+    /** @test */
+    public function a_user_can_determine_their_avatar_path()
+    {
+        $user = create('App\User');
+        
+        $this->assertEquals('avatars/default.jpeg', $user->avatar());
+
+        $user->update(['avatar_path' => 'avatars/me.jpeg']);
+
+        $this->assertEquals('avatars/me.jpeg', $user->avatar());
+    }
+
 }
