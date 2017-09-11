@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Thread extends Model
 {
     use RecordsActivity;
+    use RecordsVisits;
     
     /**
      * Auto-apply mass assignment protection.
