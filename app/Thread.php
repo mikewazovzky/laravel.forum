@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Thread extends Model
 {
     use RecordsActivity;
-    use RecordsVisits;
     
     /**
      * Auto-apply mass assignment protection.
@@ -238,5 +237,10 @@ class Thread extends Model
         return $this->updated_at > cache(
             $key = auth()->user()->visitedThreadCacheKey($this)
         );
+    }
+
+    public function visits()
+    {
+        return new Visits($this);
     }
 }

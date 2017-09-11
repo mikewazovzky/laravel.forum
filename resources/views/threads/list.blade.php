@@ -31,7 +31,7 @@
         </div>
 
         <div class="panel-footer">
-            The thread has {{ $thread->visits() }} visits.
+            The thread has {{ $thread->visits()->count() }} visits.
         </div>
     </div>
 @empty
