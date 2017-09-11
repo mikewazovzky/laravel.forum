@@ -109,4 +109,16 @@ class ReadThreadsTest extends TestCase
         $this->assertCount(20, $response['data']); // paginated to chunks of 20
         $this->assertEquals(40, $response['total']); // total number of replies
     }
+
+    /** @test */
+    public function we_record_new_visit_everytime_thread_is_read()
+    {
+        $thread = create('App\Thread');
+
+        $this->assertEquals(0, $thread->visits);
+
+        $this->call('GET', $thread->path());
+
+        $this->assertEquals(1, $thread->fresh()->visits);
+    }
 }

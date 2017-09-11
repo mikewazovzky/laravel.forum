@@ -238,9 +238,4 @@ class Thread extends Model
             $key = auth()->user()->visitedThreadCacheKey($this)
         );
     }
-
-    public function visits()
-    {
-        return new Visits($this);
-    }
 }
