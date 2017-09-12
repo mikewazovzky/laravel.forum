@@ -15,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'avatar_path'
+        'name', 'email', 'password', 'avatar_path', 'confirmed', 'confirmation_token'
     ];
 
     /**
@@ -25,6 +25,10 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password', 'remember_token', 'email'
+    ];
+
+    protected $casts = [
+        'confirmed' => 'boolean'
     ];
 
 
@@ -56,6 +60,13 @@ class User extends Authenticatable
     public function activities()
     {
         return $this->hasMany(Activity::class);
+    }
+
+    public function confirm()
+    {
+        $this->update(['confirmed' => true]);
+
+        return $this;
     }
 
     public function visitedThreadCacheKey($thread)

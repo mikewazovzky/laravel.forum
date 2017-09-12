@@ -16,7 +16,8 @@ class RedirectIfEmailNotConfirmed
     public function handle($request, Closure $next)
     {
         if (! $request->user()->confirmed) {
-            return redirect('/threads')->with('flash', 'Must confirm email address.');
+            return redirect('/threads')
+                ->with('flash', 'Must confirm email address.');
         }
 
         return $next($request);
