@@ -11,7 +11,27 @@ class ManageThreadTest extends TestCase
     use DatabaseMigrations;
 
     /** @test */
-    public function an_authenticated_user_may_create_new_forum_thread()
+    public function guest_may_not_create_thread()
+    {
+        $this->withExceptionHandling();
+
+        $this->get('/threads/create')
+            ->assertRedirect('/login');
+
+        $this->post('/threads', [])
+            ->assertRedirect('/login');
+    }
+
+    /** @test */
+    public function an_authenticated_user_must_confirm_email_address_before_creting_thread()
+    {
+        $this->publishThread()
+            ->assertRedirect('/threads')
+            ->assertSessionHas('flash');
+    }
+
+    /** @test */
+    public function authenticated_user_may_create_forum_thread()
     {
         // Given we have a signed in user
         $this->signIn();
@@ -24,18 +44,6 @@ class ManageThreadTest extends TestCase
         $this->get($response->headers->get('Location'))
             ->assertSee($thread->title)
             ->assertSee($thread->body);
-    }
-
-    /** @test */
-    public function guest_may_not_create_new_forum_thread()
-    {
-        $this->withExceptionHandling();
-
-        $this->get('/threads/create')
-            ->assertRedirect('/login');
-
-        $this->post('/threads', [])
-            ->assertRedirect('/login');
     }
 
     /** @test */
