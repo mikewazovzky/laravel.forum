@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"thread",
+				"thread"
+			],
+			[
+				"new",
+				"newSlug"
+			],
+			[
+				"inc",
+				"incrementSlug"
+			],
+			[
 				"in",
 				"inline"
 			],
@@ -130,10 +142,6 @@
 			[
 				"thre",
 				"threadNotByMike"
-			],
-			[
-				"thread",
-				"threads"
 			],
 			[
 				"chann",
@@ -403,6 +411,14 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "/C/OSPanel/domains/forum/resources/assets/js/components/Flash.vue",
+			"settings":
+			{
+				"buffer_size": 1063,
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -467,10 +483,24 @@
 	},
 	"expanded_folders":
 	[
-		"/C/OSPanel/domains/forum"
+		"/C/OSPanel/domains/forum",
+		"/C/OSPanel/domains/forum/resources",
+		"/C/OSPanel/domains/forum/resources/assets",
+		"/C/OSPanel/domains/forum/resources/assets/js",
+		"/C/OSPanel/domains/forum/resources/assets/js/components"
 	],
 	"file_history":
 	[
+		"/C/OSPanel/domains/forum/app/Http/Controllers/ThreadsController.php",
+		"/C/OSPanel/domains/forum/app/Thread.php",
+		"/C/OSPanel/domains/forum/routes/web.php",
+		"/C/OSPanel/domains/forum/tests/Feature/ManageThreadTest.php",
+		"/C/OSPanel/domains/forum/resources/views/pages/home.blade.php",
+		"/C/OSPanel/domains/forum/database/migrations/2017_08_30_064140_create_threads_table.php",
+		"/C/OSPanel/domains/forum/database/factories/ModelFactory.php",
+		"/C/OSPanel/domains/forum/tests/Unit/ThreadTest.php",
+		"/C/OSPanel/domains/forum/vendor/laravel/framework/src/Illuminate/Support/helpers.php",
+		"/C/OSPanel/domains/forum/vendor/laravel/framework/src/Illuminate/Support/Str.php",
 		"/C/OSPanel/domains/smart/resources/views/layouts/nav.blade.php",
 		"/C/OSPanel/domains/smart/database/migrations/2017_09_09_185012_create_industries_table.php",
 		"/C/OSPanel/domains/smart/resources/views/layouts/errors.blade.php",
@@ -481,17 +511,13 @@
 		"/C/OSPanel/domains/smart/routes/web.php",
 		"/C/OSPanel/domains/smart/resources/views/industries/index.blade.php",
 		"/C/OSPanel/domains/forum/resources/views/welcome.blade.php",
-		"/C/OSPanel/domains/forum/tests/Feature/ManageThreadTest.php",
 		"/C/OSPanel/domains/forum/vendor/laravel/framework/src/Illuminate/Contracts/Queue/ShouldQueue.php",
 		"/C/OSPanel/domains/forum/app/Providers/EventServiceProvider.php",
 		"/C/OSPanel/domains/forum/app/User.php",
 		"/C/OSPanel/domains/forum/app/Http/Controllers/Auth/RegisterController.php",
 		"/C/OSPanel/domains/forum/database/migrations/2014_10_12_000000_create_users_table.php",
-		"/C/OSPanel/domains/forum/database/factories/ModelFactory.php",
 		"/C/OSPanel/domains/forum/tests/Feature/RegistrationTest.php",
 		"/C/OSPanel/domains/forum/app/Http/Controllers/Auth/RegisterConfirmationController.php",
-		"/C/OSPanel/domains/forum/routes/web.php",
-		"/C/OSPanel/domains/forum/app/Http/Controllers/ThreadsController.php",
 		"/C/OSPanel/domains/forum/app/Mail/PleaseConfirmYourEmail.php",
 		"/C/OSPanel/domains/forum/resources/views/emails/confirm-email.blade.php",
 		"/C/OSPanel/domains/forum/app/Listeners/SendEmailConfirmationRequest.php",
@@ -516,8 +542,6 @@
 		"/C/OSPanel/domains/smart/app/Industry.php",
 		"/Z/Shared/webdev/pmo/.env",
 		"/C/Users/Dev/Documents/tmp/new.php",
-		"/C/OSPanel/domains/forum/database/migrations/2017_08_30_064140_create_threads_table.php",
-		"/C/OSPanel/domains/forum/tests/Unit/ThreadTest.php",
 		"/C/OSPanel/domains/forum/app/RecordsVisits.php",
 		"/C/Users/Dev/AppData/Roaming/Sublime Text 3/Packages/User/PhpClass.sublime-snippet",
 		"/C/OSPanel/domains/forum/resources/views/threads/index.blade.php",
@@ -563,7 +587,6 @@
 		"/C/OSPanel/domains/forum/app/Reply.php",
 		"/C/OSPanel/domains/forum/app/Notifications/YouWereMentioned.php",
 		"/C/OSPanel/domains/forum/tests/Unit/ReplyTest.php",
-		"/C/OSPanel/domains/forum/app/Thread.php",
 		"/C/OSPanel/domains/forum/tests/Feature/NotificationsTest.php",
 		"/C/OSPanel/domains/forum/app/Listeners/NotifySubscribers.php",
 		"/C/OSPanel/domains/forum/app/Events/ThreadReceivedNewReply.php",
@@ -595,14 +618,11 @@
 		"/C/OSPanel/domains/forum/app/Notifications/ThreadWasUpdated.php",
 		"/C/Users/Dev/AppData/Roaming/Sublime Text 3/Packages/User/VueComponent.sublime-snippet",
 		"/C/OSPanel/domains/forum/app/Http/Controllers/UserNotificationsController.php",
-		"/C/OSPanel/domains/forum/tests/Feature/SubscribeToThreadsTest.php",
-		"/C/OSPanel/domains/forum/resources/assets/js/pages/Thread.vue",
-		"/C/OSPanel/domains/forum/resources/assets/js/components/SubscribeButton.vue",
-		"/C/OSPanel/domains/forum/app/Http/Controllers/ThreadSubscriptionsController.php"
+		"/C/OSPanel/domains/forum/tests/Feature/SubscribeToThreadsTest.php"
 	],
 	"find":
 	{
-		"height": 34.0
+		"height": 31.0
 	},
 	"find_in_files":
 	{
@@ -642,14 +662,45 @@
 	"groups":
 	[
 		{
+			"selected": 0,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "/C/OSPanel/domains/forum/resources/assets/js/components/Flash.vue",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 1063,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1062,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Vue Syntax Highlight/vue.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
 			]
 		}
 	],
 	"incremental_find":
 	{
-		"height": 34.0
+		"height": 31.0
 	},
 	"input":
 	{
@@ -686,7 +737,7 @@
 	"project": "forum.sublime-project",
 	"replace":
 	{
-		"height": 64.0
+		"height": 58.0
 	},
 	"save_all_on_build": false,
 	"select_file":

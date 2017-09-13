@@ -83,14 +83,11 @@ class ManageThreadTest extends TestCase
     {
         $this->signIn();
 
-        $thread = create('App\Thread', ['title' => 'Foo title', 'slug' => 'foo-title']);
+        $thread = create('App\Thread', ['title' => 'Foo title']);
         $this->assertEquals($thread->fresh()->slug, 'foo-title');     
 
-        $this->post(route('threads'), $thread->toArray());
-        $this->assertTrue(Thread::where('slug', 'foo-title-2')->exists());     
-
-        $this->post(route('threads'), $thread->toArray());
-        $this->assertTrue(Thread::where('slug', 'foo-title-3')->exists());    
+        $thread = $this->postJson(route('threads'), $thread->toArray())->json();
+        $this->assertEquals("foo-title-{$thread['id']}", $thread['slug']); 
     }
 
     /** @test */
@@ -98,11 +95,11 @@ class ManageThreadTest extends TestCase
     {
         $this->signIn();
 
-        $thread = create('App\Thread', ['title' => 'Foo title 24', 'slug' => 'foo-title-24']);
+        $thread = create('App\Thread', ['title' => 'Foo title 24']);
         $this->assertEquals($thread->fresh()->slug, 'foo-title-24');   
 
-        $this->post(route('threads'), $thread->toArray());
-        $this->assertTrue(Thread::where('slug', 'foo-title-24-2')->exists());         
+        $thread = $this->postJson(route('threads'), $thread->toArray())->json();
+        $this->assertEquals("foo-title-24-{$thread['id']}", $thread['slug']);      
     }
 
     /** @test */

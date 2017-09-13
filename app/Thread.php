@@ -58,6 +58,12 @@ class Thread extends Model
             // Higher order messaging on Laravel collection, use 'each' pseudo prop  
             $thread->replies->each->delete();
         });
+
+        static::created(function($thread) {
+            $thread->update([
+                'slug' => $thread->title
+            ]);
+        });
     }
    
     /**
@@ -251,39 +257,12 @@ class Thread extends Model
 
     public function setSlugAttribute($value)
     {
-        $original = $slug = str_slug($value);
-        $count = 2;
+        $slug = str_slug($value);
 
-        while(static::whereSlug($slug)->exists()) {
-            $slug = "{$original}-" . $count++;
+        if (static::whereSlug($slug)->exists()) {
+            $slug = "{$slug}-" . $this->id;
         }
-
-        // if (static::whereSlug($slug = str_slug($value))->exists()) {
-        //     $slug = $this->incrementSlug($slug);
-        // }
 
         $this->attributes['slug'] = $slug;
     }
-
-    // protected function incrementSlug($slug, $count = 2)
-    // {
-    //     // Option 1 (original, does not cover edgecases)
-    //     // $max = static::whereTitle($this->title)->latest('id')->value('slug');
-    //     // if (is_numeric($max[-1])) {
-    //     //     return preg_replace_callback('/(\d+)$/', function ($matches) {
-    //     //         return $matches[1] + 1;
-    //     //     }, $max);
-    //     // }
-    //     // return "{$slug}-2";
-
-    //     // Option 2. transfered to setSlugAttribute()
-    //     // multiple database queries possible,
-    //     // scenario: created->deleted->created thread with the same title, 
-    //     //   link to original thread will now refer to the new thread  
-    //     $original = $slug;
-    //     while(static::whereSlug($slug)->exists()) {
-    //         $slug = "{$original}-" . $count++;
-    //     }
-    //     return $slug;
-    // }
 }
