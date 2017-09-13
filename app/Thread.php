@@ -14,7 +14,7 @@ class Thread extends Model
      *
      * @var array
      */
-    protected $fillable = [ 'user_id', 'channel_id', 'title', 'body'];
+    protected $fillable = [ 'user_id', 'channel_id', 'title', 'body', 'slug'];
 
 
     /**
@@ -60,6 +60,15 @@ class Thread extends Model
         });
     }
    
+    /**
+     * Get the route key name for Laravel.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'slug';              
+    }
 
     /**
      * Get a string path for the thread.
@@ -69,7 +78,8 @@ class Thread extends Model
     public function path()
     {
         // return '/threads/' . $this->channel->slug . '/' . $this->id;
-        return "/threads/{$this->channel->slug}/{$this->id}";
+        // return "/threads/{$this->channel->slug}/{$this->id}";
+        return "/threads/{$this->channel->slug}/{$this->slug}";
     }
 
     /**
