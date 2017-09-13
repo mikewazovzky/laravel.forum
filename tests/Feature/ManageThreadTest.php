@@ -16,17 +16,23 @@ class ManageThreadTest extends TestCase
         $this->withExceptionHandling();
 
         $this->get('/threads/create')
-            ->assertRedirect('/login');
+            ->assertRedirect(route('login'));
 
-        $this->post('/threads', [])
-            ->assertRedirect('/login');
+        $this->post(route('threads'), [])
+            ->assertRedirect(route('login'));
     }
 
     /** @test */
     public function an_authenticated_user_must_confirm_email_address_before_creting_thread()
     {
-        $this->publishThread()
-            ->assertRedirect('/threads')
+        $user = factory('App\User')->states('unconfirmed')->create();
+        
+        $this->signIn($user);
+
+        $thread = make('App\Thread');
+
+        $this->post(route('threads'), $thread->toArray())
+            ->assertRedirect(route('threads'))
             ->assertSessionHas('flash');
     }
 
@@ -37,7 +43,7 @@ class ManageThreadTest extends TestCase
         $this->signIn();
         // When user post a new thread
         $thread = make('App\Thread');
-        $response = $this->post('/threads', $thread->toArray());
+        $response = $this->post(route('threads'), $thread->toArray());
         // dd($response->headers->get('Location')); // check redirect uri
         // Then thread is posted to databse and 
         // .. is visble on threads.index page 
@@ -123,6 +129,6 @@ class ManageThreadTest extends TestCase
 
         $thread = make('App\Thread', $attributes);
 
-        return $this->post('/threads', $thread->toArray());
+        return $this->post(route('threads'), $thread->toArray());
     }
 }
