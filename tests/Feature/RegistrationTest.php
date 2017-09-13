@@ -18,7 +18,14 @@ class RegistrationTest extends TestCase
     {
         Mail::fake();
 
-        event(new Registered(create('App\User')));
+        // event(new Registered(create('App\User')));
+
+        $this->post(route('register'), [
+            'name' => 'John',
+            'email' => 'john@example.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+        ]);
 
         Mail::assertSent(PleaseConfirmYourEmail::class);
     }
