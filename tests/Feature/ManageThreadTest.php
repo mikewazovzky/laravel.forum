@@ -94,6 +94,18 @@ class ManageThreadTest extends TestCase
     }
 
     /** @test */
+    public function a_thread_with_a_title_that_ends_in_a_number_should_generate_the_proper_slug()
+    {
+        $this->signIn();
+
+        $thread = create('App\Thread', ['title' => 'Foo title 24', 'slug' => 'foo-title-24']);
+        $this->assertEquals($thread->fresh()->slug, 'foo-title-24');   
+
+        $this->post(route('threads'), $thread->toArray());
+        $this->assertTrue(Thread::where('slug', 'foo-title-24-2')->exists());         
+    }
+
+    /** @test */
     public function unauthorized_users_may_not_delete_threads()
     {
         $this->withExceptionHandling();
