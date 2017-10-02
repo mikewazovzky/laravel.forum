@@ -16,7 +16,7 @@ class Reply extends Model
      * @var array
      */
     protected $fillable = ['user_id', 'body'];
-    
+
     /**
      * The relations to eager load on every query.
      *
@@ -26,7 +26,7 @@ class Reply extends Model
 
     /**
      * The accessors to append to the model's array form.
-     * Specifies list of custom attributes that will be appended when 
+     * Specifies list of custom attributes that will be appended when
      * model is casted toArray or to JSON object
      *
      * @var array
@@ -40,7 +40,7 @@ class Reply extends Model
     {
         parent::boot();
         // To turn off eager loading
-        // App\Thread::withoutGlobalScope('favorites')->all() 
+        // App\Thread::withoutGlobalScope('favorites')->all()
         // App\Thread::withoutGlobalScopes()->all()
         static::addGlobalScope('favorites', function($builder) {
             return $builder->with('favorites');
@@ -48,11 +48,11 @@ class Reply extends Model
 
         static::created(function($reply) {
             $reply->thread->increment('replies_count');
-        });   
+        });
 
         static::deleted(function($reply) {
             $reply->thread->decrement('replies_count');
-        });   
+        });
 
     }
 
@@ -92,7 +92,7 @@ class Reply extends Model
     }
 
     /**
-     * 
+     *
      * @return array of strings
      */
     public function mentionedUsers()
@@ -107,5 +107,9 @@ class Reply extends Model
     {
         $this->attributes['body'] = preg_replace('/\@([\w\-]+)/', '<a href="/profiles/$1">$0</a>', $body);
     }
-    
+
+    public function isBest()
+    {
+        return $this->id == $this->thread->best_reply_id;
+    }
 }

@@ -8,14 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Thread extends Model
 {
     use RecordsActivity;
-    
+
     /**
      * Auto-apply mass assignment protection.
      *
      * @var array
      */
-    protected $fillable = [ 'user_id', 'channel_id', 'title', 'body', 'slug'];
-
+    protected $fillable = [ 'user_id', 'channel_id', 'title', 'body', 'slug', 'best_reply_id'];
+    // protected $guarded = [];
 
     /**
      * The relationships to always eager-load.
@@ -37,25 +37,25 @@ class Thread extends Model
         //     return $builder->withCount('replies');
         // });
         // replies_count field added to database
-        
+
         // Model events: delete associated replies when model:deleting event is fired off
-        // 
+        //
         static::deleting(function($thread) {
             // $thread->replies()->delete();
 
-            // The code above doesn't fire deleting event on reply model 
-            // to delete asspciated reply activity, 
-            // because reply models are not fetched,  
+            // The code above doesn't fire deleting event on reply model
+            // to delete asspciated reply activity,
+            // because reply models are not fetched,
             // just a database query is creted to delete replies
 
-            // Option 1. 
+            // Option 1.
             // Fetch replies (models) and delete them
             // $thread->replies->each(function($reply) {
             //     $reply->delete();
             // });
 
-            // Option 2. 
-            // Higher order messaging on Laravel collection, use 'each' pseudo prop  
+            // Option 2.
+            // Higher order messaging on Laravel collection, use 'each' pseudo prop
             $thread->replies->each->delete();
         });
 
@@ -65,7 +65,7 @@ class Thread extends Model
             ]);
         });
     }
-   
+
     /**
      * Get the route key name for Laravel.
      *
@@ -73,7 +73,7 @@ class Thread extends Model
      */
     public function getRouteKeyName()
     {
-        return 'slug';              
+        return 'slug';
     }
 
     /**
@@ -134,7 +134,7 @@ class Thread extends Model
         // foreach($this->subscriptions as $subscription) {
         //     if($subscription->user_id != $reply->user_id) {
         //         $subscription->user->notify(new ThreadWasUpdated($this, $reply));
-        //     }           
+        //     }
         // }
 
         // $this->subscriptions
@@ -208,7 +208,7 @@ class Thread extends Model
         $this->subscriptions()
             ->where([ 'user_id' => $user ? $user->id : auth()->id() ])
             ->delete();
-    }    
+    }
 
     /**
      * A thread can have many subscriptions.
@@ -221,7 +221,7 @@ class Thread extends Model
     }
 
     /**
-     * Check if a user is subscribed to the thread 
+     * Check if a user is subscribed to the thread
      *
      * @param User|null
      * @return bool
@@ -233,7 +233,7 @@ class Thread extends Model
     }
 
     /**
-     * Attribute specifies if a user is subscribed to the thread 
+     * Attribute specifies if a user is subscribed to the thread
      *
      * @param User|null
      * @return bool
@@ -241,14 +241,14 @@ class Thread extends Model
     public function getIsSubscribedToAttribute()
     {
         return $this->isSubscribedTo();
-    }    
+    }
 
     public function hasUpdatesFor($user = null)
     {
         $user = $user ?: auth()->user();
 
         // Look in the cash for the proper key
-        // compare that element (carbon instance) with $thread->updated_at 
+        // compare that element (carbon instance) with $thread->updated_at
         // $key = auth()->user()->visitedThreadCacheKey($this);
         return $this->updated_at > cache(
             $key = auth()->user()->visitedThreadCacheKey($this)
@@ -265,4 +265,12 @@ class Thread extends Model
 
         $this->attributes['slug'] = $slug;
     }
+
+    public function markBestReply($reply)
+    {
+        $this->update([
+            'best_reply_id' => $reply->id
+        ]);
+    }
+
 }
