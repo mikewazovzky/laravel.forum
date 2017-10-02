@@ -31,7 +31,9 @@
                 <button class="btn btn-xs mr-1" @click="editing = true">Edit</button>
                 <button class="btn btn-danger btn-xs" @click="destroy">Delete</button>
             </div>
-            <button class="btn btn-default btn-xs ml-a" @click="markBestReply" v-show="! isBest">Best Reply?</button>
+            <div v-if="authorize('markBestReply', reply)" class="ml-a">
+                <button class="btn btn-default btn-xs" @click="markBestReply" v-show="! isBest">Best Reply?</button>
+            </div>
         </div>
     </div>
 </template>
@@ -50,9 +52,15 @@
                 editing: false,
                 id: this.data.id,
                 body: this.data.body,
-                isBest: false,
+                isBest: this.data.isBest,
                 reply: this.data
             };
+        },
+
+        created() {
+            window.events.$on('mark-best-reply', (id) => {
+                this.isBest = (id === this.reply.id);
+            });
         },
 
         computed: {
@@ -86,7 +94,9 @@
 
             markBestReply() {
                 axios.post('/replies/' + this.id + '/best')
-                    .then(response => this.isBest = true);
+                    .then((response) => {
+                        window.events.$emit('mark-best-reply', this.id);
+                    });
             }
         }
     };

@@ -272,5 +272,4 @@ class Thread extends Model
             'best_reply_id' => $reply->id
         ]);
     }
-
 }
