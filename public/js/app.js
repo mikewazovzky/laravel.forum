@@ -26787,11 +26787,23 @@ if (token) {
 window.Vue = __webpack_require__(152);
 
 // Single point to manage authorization for frontend
-Vue.prototype.authorize = function (handler) {
-    // Added here additional logic, e.g. for admin priveledges
-    var user = window.App.user;
-    return user ? handler(user) : false;
+var authorizations = __webpack_require__(203);
+
+Vue.prototype.authorize = function () {
+    if (!window.App.user) return false;
+
+    for (var _len = arguments.length, params = Array(_len), _key = 0; _key < _len; _key++) {
+        params[_key] = arguments[_key];
+    }
+
+    if (typeof params[0] === 'string') {
+        return authorizations[params[0]](params[1]);
+    }
+
+    return params[0](window.App.user);
 };
+
+Vue.prototype.signedIn = window.App.signedIn;
 
 window.events = new Vue();
 
@@ -58744,24 +58756,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             editing: false,
             id: this.data.id,
             body: this.data.body,
-            isBest: false
+            isBest: false,
+            reply: this.data
         };
     },
 
 
     computed: {
-        signedIn: function signedIn() {
-            return window.App.signedIn;
-        },
         ago: function ago() {
             return __WEBPACK_IMPORTED_MODULE_0_moment___default()(this.data.created_at).fromNow() + '...';
-        },
-        canUpdate: function canUpdate() {
-            var _this = this;
-
-            return this.authorize(function (user) {
-                return _this.data.user_id == user.id;
-            });
         }
     },
 
@@ -58771,25 +58774,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.body = this.data.body;
         },
         update: function update() {
-            var _this2 = this;
+            var _this = this;
 
             axios.patch('/replies/' + this.data.id, { body: this.body }).then(function () {
-                _this2.editing = false;
+                _this.editing = false;
                 flash('Your reply\'s been updated.');
             }).catch(function (error) {
-                _this2.body = _this2.data.body;
+                _this.body = _this.data.body;
                 flash('ERROR ' + error.response.status + ': ' + error.response.data, 'danger');
             });
         },
         destroy: function destroy() {
-            var _this3 = this;
+            var _this2 = this;
 
             axios.delete('/replies/' + this.id).then(function (response) {
-                return _this3.$emit('deleted', _this3.data.id);
+                return _this2.$emit('deleted', _this2.data.id);
             });
         },
         markBestReply: function markBestReply() {
-            this.isBest = true;
+            var _this3 = this;
+
+            axios.post('/replies/' + this.id + '/best').then(function (response) {
+                return _this3.isBest = true;
+            });
         }
     }
 });
@@ -59244,7 +59251,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   })]), _vm._v(" "), _c('div', {
     staticClass: "panel-footer level"
-  }, [(_vm.canUpdate) ? _c('div', [_c('button', {
+  }, [(_vm.authorize('updateReply', _vm.reply)) ? _c('div', [_c('button', {
     staticClass: "btn btn-xs mr-1",
     on: {
       "click": function($event) {
@@ -61290,6 +61297,26 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 195 */,
+/* 196 */,
+/* 197 */,
+/* 198 */,
+/* 199 */,
+/* 200 */,
+/* 201 */,
+/* 202 */,
+/* 203 */
+/***/ (function(module, exports) {
+
+var user = window.App.user;
+
+module.exports = {
+    updateReply: function updateReply(reply) {
+        return reply.user_id === user.id;
+    }
+};
 
 /***/ })
 /******/ ]);
